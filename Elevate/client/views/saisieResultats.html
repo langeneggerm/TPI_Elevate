@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Elevate - Saisie des résultats</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Initialise la date et l'heure
+      function setCurrentDateTime() {
+        const now = new Date();
+        const iso = now.toISOString().slice(0, 19);
+        document.getElementById("datetime").value = iso.replace("T", " ");
+      }
+
+      // Simule l'enregistrement
+      function enregistrerResultat() {
+        const dossard = document.getElementById("dossard").value;
+        if (!dossard) {
+          alert("Veuillez entrer un numéro de dossard valide.");
+          return;
+        }
+
+        if (confirm("Confirmez-vous l’enregistrement du résultat ?")) {
+          alert("Résultat enregistré avec succès !");
+          document.getElementById("formulaire").reset();
+          setCurrentDateTime();
+          document.getElementById("dossard").focus();
+        }
+      }
+
+      // Initialisation à l'ouverture
+      window.onload = () => {
+        setCurrentDateTime();
+      };
+    </script>
+  </head>
+
+  <body class="bg-blue-50 text-gray-800">
+    <div class="max-w-sm mx-auto min-h-screen flex flex-col justify-between">
+
+      <!-- En-tête -->
+      <header class="bg-blue-700 text-white p-4 rounded-b-lg shadow text-center">
+        <h1 class="text-lg font-bold">Elevate</h1>
+        <p class="text-sm">Sommet - Les Millets</p>
+      </header>
+
+      <!-- Formulaire -->
+      <main class="px-4 py-6 flex-1">
+        <form id="formulaire" class="space-y-6">
+          <!-- Dossard -->
+          <div>
+            <label for="dossard" class="block font-medium mb-1">Concurrent(e)</label>
+            <input
+              type="number"
+              id="dossard"
+              name="dossard"
+              inputmode="numeric"
+              class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Numéro de dossard"
+              required
+            />
+          </div>
+
+          <!-- Date et Heure -->
+          <div>
+            <label for="datetime" class="block font-medium mb-1">Date et heure</label>
+            <div class="flex gap-2">
+              <input
+                type="text"
+                id="datetime"
+                name="datetime"
+                class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                readonly
+              />
+              <button
+                type="button"
+                onclick="setCurrentDateTime()"
+                class="p-2 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200"
+                title="Mettre à jour l'heure"
+              >
+                ⏱️
+              </button>
+            </div>
+          </div>
+
+          <!-- Remarques -->
+          <div>
+            <label for="remarques" class="block font-medium mb-1">Remarques</label>
+            <textarea
+              id="remarques"
+              name="remarques"
+              rows="4"
+              class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Vos remarques ..."
+            ></textarea>
+          </div>
+
+          <!-- Enregistrer -->
+          <button
+            type="button"
+            onclick="enregistrerResultat()"
+            class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          >
+            Enregistrer
+          </button>
+        </form>
+      </main>
+
+      <!-- Bouton retour -->
+      <footer class="bg-white p-4 rounded-t-lg shadow flex justify-start">
+        <button
+          onclick="window.location.href='selection-poste.html'"
+          class="text-blue-700 hover:text-blue-900 font-semibold text-sm flex items-center"
+        >
+          ← Retour sélection
+        </button>
+      </footer>
+    </div>
+  </body>
+</html>

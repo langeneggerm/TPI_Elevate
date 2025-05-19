@@ -1,0 +1,22 @@
+{
+    "name": "Elevate",
+    "short_name": "Elevate",
+    "description": "Ce site est un site permettant de lister les résultats des courses et des marches",
+    "start_url": "/client/",
+    "display": "standalone",
+
+    "background_color": "#ffffff",
+    "theme_color": "#a70d0d",
+    "icons": [
+        {
+            "src": "img/elevate_192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "img/elevate_512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

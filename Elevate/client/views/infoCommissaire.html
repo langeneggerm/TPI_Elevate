@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elevate - Résultats</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+  </head>
+  <body class="bg-blue-50 text-gray-800">
+    <div class="max-w-sm mx-auto min-h-screen flex flex-col">
+      <!-- En-tête -->
+      <header class="bg-blue-700 text-white p-4 rounded-b-lg shadow">
+        <h1 class="text-2xl font-bold text-center">Elevate</h1>
+        <p class="text-center text-sm">Points obtenus</p>
+      </header>
+
+      <!-- Informations du concurrent -->
+      <section class="bg-white rounded-lg shadow mt-4 p-4 mx-2 flex items-center space-x-4">
+        <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.alter-a.com%2Ftest-logo-small-black-transparent-1%2F&psig=AOvVaw1DVgB6zHigR3hhZDuJ95vG&ust=1747396424204000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOCru4u1pY0DFQAAAAAdAAAAABAE" alt="Photo concurrent" class="rounded-full w-12 h-12" />
+        <div>
+          <p class="font-semibold">17 - Joël Atkins <span class="text-blue-700 font-bold">8200</span></p>
+          <p class="text-sm text-gray-500">1680 Romont</p>
+        </div>
+      </section>
+
+      <!-- Liste des résultats -->
+      <section class="bg-white rounded-lg shadow mt-4 p-4 mx-2 flex-1 overflow-y-auto">
+        <ul class="space-y-4 text-sm">
+          <li>
+            <p><strong>Sommet</strong> - Point de Cray</p>
+            <p class="text-gray-500">28.10.24 - 11:05</p>
+            <p class="text-blue-600 font-semibold">+2000 pts</p>
+          </li>
+          <li>
+            <p><strong>Cible</strong> - Albéve 2</p>
+            <p class="text-gray-500">28.10.24 - 11:02</p>
+            <p class="text-blue-600 font-semibold">+1500 pts</p>
+          </li>
+          <li>
+            <p><strong>Malus</strong></p>
+            <p class="text-gray-500">28.10.24 - 11:01</p>
+            <p class="text-red-500 font-semibold">-500 pts</p>
+          </li>
+          <li>
+            <p><strong>Slalom</strong> - Sauregra</p>
+            <p class="text-gray-500">28.10.24 - 10:13</p>
+            <p class="text-blue-600 font-semibold">+500 pts</p>
+          </li>
+          <li>
+            <p><strong>Touch</strong> - Les Millets</p>
+            <p class="text-gray-500">28.10.24 - 10:09</p>
+            <p class="text-blue-600 font-semibold">+250 pts</p>
+          </li>
+          <li>
+            <p><strong>Sommet</strong> - Albéve 1</p>
+            <p class="text-gray-500">28.10.24 - 09:59</p>
+            <p class="text-blue-600 font-semibold">+700 pts</p>
+          </li>
+          <li>
+            <p><strong>Cible</strong> - Albéve 1</p>
+            <p class="text-gray-500">28.10.24 - 09:55</p>
+            <p class="text-blue-600 font-semibold">+500 pts</p>
+          </li>
+          <li>
+            <p><strong>Touch</strong> - La Brâ</p>
+            <p class="text-gray-500">28.10.24 - 09:40</p>
+            <p class="text-blue-600 font-semibold">+500 pts</p>
+          </li>
+          <li>
+            <p><strong>Sommet</strong> - L’Aiguille</p>
+            <p class="text-gray-500">28.10.24 - 08:05</p>
+            <p class="text-blue-600 font-semibold">+1750 pts</p>
+          </li>
+        </ul>
+      </section>
+
+      <footer class="bg-white p-4 rounded-t-lg shadow mt-4 flex justify-center space-x-4">
+        <!-- Bouton Classement -->
+        <button id="btnPodium" class="p-2 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+          <img src="img/podium.svg" alt="Classement" class="h-6 w-6" />
+        </button>
+      
+        <!-- Bouton Login -->
+        <button id="btnLogin" class="p-2 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+          <img src="img/login.svg" alt="Login" class="h-6 w-6" />
+        </button>
+      </footer>
+      
+      
+    </div>
+  </body>
+</html>

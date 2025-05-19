@@ -1,0 +1,50 @@
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elevate</title>
+
+  <!--Librairie-->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!--Vue HTML-->
+  <link rel="preload" href="views/login.html" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="views/saisieResultats.html" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="views/infoCommissaire.html" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="views/classement.html" as="fetch" crossorigin="anonymous">
+  
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- JS Files -->
+  <script src="js/controller/indexCtrl.js"></script>
+  <script src="js/worker/httpService.js"></script>
+  <script src="js/controller/loginCtrl.js"></script>
+  <script src="js/controller/classementCtrl.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/client/sw.js')
+      .then(registration => {
+        console.log('Service Worker enregistré avec succès:', registration);
+      })
+      .catch(error => {
+        console.log('Erreur lors de l’enregistrement du Service Worker:', error);
+      });
+  });
+}
+</script>
+
+
+
+</head>
+
+<body class="bg-blue-50 min-h-screen flex flex-col justify-between items-center p-4 font-sans pb-24 ">
+
+<div id="content"></div>
+
+
+</body>
+
+</html>
