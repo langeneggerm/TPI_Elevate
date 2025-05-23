@@ -14,53 +14,50 @@ class LoginController {
      */
     constructor() {
         $("#content").load("views/login.html", () => {
-            $("#btnClassement").on("click", () => (this.gotoClassement()));
+            $("#btnClassement").on("click", () => this.gotoClassement());
+            $("#btnConnexion").on("click", () => this.loginCommissaire());
+            if (localStorage.getItem('email')) {
+                $('#email').val(localStorage.getItem('email'));
+            }
+            
         });
-        this.load();
-    }
 
-    /**
-     * Vérifie si l'utilisateur est autorisé
-     * @returns {boolean} - Retourne true par défaut (ou peut être étendu pour une logique supplémentaire)
-     */
-    isAuthorized() {
-        return true;
     }
 
 
-    gotoClassement(){
+    gotoClassement() {
         this.index = new IndexController();
-
     }
-  
 
-    /**
-     * Configure les événements et gère la soumission du formulaire de connexion
-     */
-    load() {
+    gotoPosteCommissaire() {
+        this.postesCommissaire = new PostesCommissaireController(localStorage.getItem("id"))
+    }
 
-        // Appel de la fonction d'authentification
-        /*     login(
-                 username,
-                 password,
-                 (data) => {
-                     if (data.result === true) {
-                         // Stockage du nom d'utilisateur en local et mise à jour de l'état de connexion
-                         localStorage.setItem("username", data.username);
-                         this.viewService.setUserConnected(data.username);
- 
-                         // Redirection vers la vue JPO
-                         this.viewService.changeView("jpo", true, data.username);
-                     } else {
-                         // Afficher une erreur si les informations sont incorrectes
-                         this.viewService.showError("Nom d'utilisateur ou mot de passe invalide.");
-                     }
-                 },
-                 () => {
-                     // Gérer les erreurs réseau ou autres problèmes lors de la connexion
-                     this.viewService.showError("Erreur réseau ou problème lors de la connexion.");
-                 }
-             );*/
+    loginCommissaire() {
+        const username = $("#email").val();
+        const password = $("#password").val();
+        login(username, password,
+            (data) => {
+                if (data.result === true) {
+                    // Stockage du nom d'utilisateur en local et mise à jour de l'état de connexion
+                    localStorage.setItem("email", data.email);
+                    localStorage.setItem("id", data.id);
+                    localStorage.setItem("isLogged", true);
+                    alert("La connexion à réussi !");
+                    this.gotoPosteCommissaire();
+                } else {
+                    // Afficher une erreur si les informations sont incorrectes
+                    alert("Nom d'utilisateur ou mot de passe invalide.");
+                }
+            },
+            (error) => {
+                console.error("Erreur AJAX :", error);
+                if (error.responseText) {
+                    console.error("Réponse brute :", error.responseText);
+                }
+                alert("Erreur réseau ou problème lors de la connexion.");
+            }
 
+        );
     }
 }

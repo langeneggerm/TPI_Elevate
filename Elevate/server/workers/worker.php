@@ -41,4 +41,26 @@ class Worker
     }
 
 
+    public function getInfoConcurrent($dossard): array
+    {
+        return $this->db->getInfoConcurrent($dossard);
+    }
+
+
+
+    public function getPostesCommissaire($idComm): array
+    {
+        return $this->db->getPostesCommissaire($idComm);
+    }
+
+    public function postResultatConcurrent($idPoste,$dossard,$date,$remarque,$idCommissaire):array
+    {
+        return $this->db->postResultatConcurrent($idPoste,$dossard,$date,$remarque,$idCommissaire);
+    }
+
+    public function postMalusConcurrent($dossard, $date, $remarque, $idCommissaire, $nombrePoints): array
+    {
+        return $this->db->postMalusConcurrent($dossard, $date, $remarque, $idCommissaire, $nombrePoints);
+    }
+
 }

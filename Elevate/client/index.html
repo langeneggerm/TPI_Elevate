@@ -14,7 +14,9 @@
   <link rel="preload" href="views/saisieResultats.html" as="fetch" crossorigin="anonymous">
   <link rel="preload" href="views/infoCommissaire.html" as="fetch" crossorigin="anonymous">
   <link rel="preload" href="views/classement.html" as="fetch" crossorigin="anonymous">
-  
+  <link rel="preload" href="views/postesCommissaire.html" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="views/saisieMalus.html" as="fetch" crossorigin="anonymous">
+
   <link rel="manifest" href="manifest.json" />
 
   <!-- JS Files -->
@@ -22,19 +24,23 @@
   <script src="js/worker/httpService.js"></script>
   <script src="js/controller/loginCtrl.js"></script>
   <script src="js/controller/classementCtrl.js"></script>
+  <script src="js/controller/infoConcurrent.js"></script>
+  <script src="js/controller/postesCommissaireCtrl.js"></script>
+  <script src="js/controller/saisieResultatsCtrl.js"></script>
+  <script src="js/controller/saisieMalusCtrl.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/client/sw.js')
-      .then(registration => {
-        console.log('Service Worker enregistré avec succès:', registration);
-      })
-      .catch(error => {
-        console.log('Erreur lors de l’enregistrement du Service Worker:', error);
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/client/sw.js')
+          .then(registration => {
+            console.log('Service Worker enregistré avec succès:', registration);
+          })
+          .catch(error => {
+            console.log('Erreur lors de l’enregistrement du Service Worker:', error);
+          });
       });
-  });
-}
-</script>
+    }
+  </script>
 
 
 
@@ -42,7 +48,7 @@
 
 <body class="bg-blue-50 min-h-screen flex flex-col justify-between items-center p-4 font-sans pb-24 ">
 
-<div id="content"></div>
+  <div id="content"></div>
 
 
 </body>

@@ -4,6 +4,10 @@ const FILES_TO_CACHE = [
   '/client/index.html',
   '/client/views/login.html',
   '/client/views/classement.html',
+  '/client/views/saisieMalus.html',
+  '/client/views/saisieResultats.html',
+
+
   '/client/sw.js',
   '/client/img/elevate_192x192.png',
   '/client/img/elevate_512x512.png',
@@ -12,7 +16,9 @@ const FILES_TO_CACHE = [
   '/client/js/controller/indexCtrl.js',
   '/client/js/controller/loginCtrl.js',
   '/client/js/controller/classementCtrl.js',
-  '/client/js/worker/httpService.js'
+  '/client/js/worker/httpService.js',
+  '/client/js/worker/saisieMalusCtrl.js',
+  '/client/js/worker/saisieResultatsCtrl.js'
 ];
 
 // 🧱 Installation : cache des fichiers statiques
@@ -38,30 +44,79 @@ self.addEventListener('activate', event => {
   );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Si le fichier est dans le cache, on le retourne
-        if (response) return response;
+const DB_NAME = 'offline-cache-db';
+const STORE_NAME = 'responses';
 
-        // Sinon on essaie de le récupérer du réseau
-        return fetch(event.request)
-          .then(networkResponse => {
-            return caches.open(CACHE_NAME).then(cache => {
-              // On peut mettre en cache les fichiers statiques à la volée
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
-            });
-          });
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // Clone et sauvegarde dans IndexedDB
+        const responseClone = response.clone();
+        responseClone.text().then(body => {
+          saveToIndexedDB(event.request.url, body, responseClone.headers.get('Content-Type'));
+        });
+        return response;
       })
       .catch(() => {
-        // Si on est hors-ligne et qu'on a rien : afficher une page HTML simple
-        return new Response('<h1>Hors ligne</h1><p>Contenu indisponible.</p>', {
-          headers: { 'Content-Type': 'text/html' }
+        // Si fetch échoue => offline => tente la base de données
+        return getFromIndexedDB(event.request.url).then(stored => {
+          if (stored) {
+            return new Response(stored.body, {
+              headers: { 'Content-Type': stored.contentType }
+            });
+          } else {
+            return new Response('<h1>Hors ligne</h1><p>Contenu indisponible.</p>', {
+              headers: { 'Content-Type': 'text/html' }
+            });
+          }
         });
       })
   );
 });
+
+// IndexedDB — ouvrir et stocker
+function saveToIndexedDB(url, body, contentType) {
+  const open = indexedDB.open(DB_NAME, 1);
+  open.onupgradeneeded = () => {
+    open.result.createObjectStore(STORE_NAME, { keyPath: 'url' });
+  };
+  open.onsuccess = () => {
+    const db = open.result;
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    store.put({ url, body, contentType });
+    tx.oncomplete = () => db.close();
+  };
+}
+
+// IndexedDB — lecture
+function getFromIndexedDB(url) {
+  return new Promise((resolve, reject) => {
+    const open = indexedDB.open(DB_NAME, 1);
+    open.onsuccess = () => {
+      const db = open.result;
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const get = store.get(url);
+      get.onsuccess = () => resolve(get.result);
+      get.onerror = () => reject();
+    };
+    open.onerror = () => reject();
+  });
+}
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'sync-posts') {
+    console.log('SW reçu : synchronisation des POST stockés');
+    sendQueuedRequests();
+  }
+});
+
+
+
+
 
 

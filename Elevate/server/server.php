@@ -2,22 +2,41 @@
 <?php
 
 require_once "controllers/controller.php";
+require_once "controllers/sessionController.php";
 
 $ctrl = Controller::getInstance();
-
+$session = new SessionController($ctrl->getWorker());
 // Vérification de la méthode HTTP
 if (isset($_SERVER['REQUEST_METHOD'])) {
     switch ($_SERVER['REQUEST_METHOD']) {
 
-            // ==========================
-            // Gestion des requêtes GET
-            // ==========================
+        // ==========================
+        // Gestion des requêtes GET
+        // ==========================
         case 'GET':
             if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
-                        // Récupération de tous les QR codes
+
                     case 'getRanking':
                         handleGetResponse($ctrl->getWorker()->getRanking());
+                        break;
+
+
+                    case 'getInfoConcurrent':
+                        handleGetResponse($ctrl->getWorker()->getInfoConcurrent($_GET['dossard']));
+                        break;
+
+                    case 'getPostesCommissaire':
+                        if (isset($_GET['idComm'])) {
+                            $idComm = sanitizeInput($_GET['idComm']);
+                            handleGetResponse($ctrl->getWorker()->getPostesCommissaire($idComm));
+                        } else {
+                            handleErrorResponse("ID du commissaire manquant pour récuperer ces postes.");
+                        };
+                        break;
+
+                    case 'hashPassword':
+                        echo $session->hashPassword($_GET['password']);
                         break;
 
                     default:
@@ -27,16 +46,16 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
             }
             break;
 
-            // ==========================
-            // Gestion des requêtes POST
-            // ==========================
+        // ==========================
+        // Gestion des requêtes POST
+        // ==========================
         case 'POST':
             if (isset($_POST['action'])) {
                 switch ($_POST['action']) {
 
                     case 'login':
-                        if (isset($_POST['username'], $_POST['password'])) {
-                            $username = sanitizeInput($_POST['username']);
+                        if (isset($_POST['email'], $_POST['password'])) {
+                            $username = sanitizeInput($_POST['email']);
                             $password = sanitizeInput($_POST['password']);
 
                             echo $session->login($username, $password);
@@ -46,6 +65,52 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
                         }
                         break;
 
+                    case 'isLogged':
+                        echo $session->isLogged();
+                        http_response_code(200);
+                        break;
+
+                    case 'postResultatConcurrent':
+                        if (isset($_POST['idPoste'], $_POST['dossard'], $_POST['date'], $_POST['remarque'], $_POST['idCommissaire'])) {
+                            $idPoste = sanitizeInput($_POST['idPoste']);
+                            $dossard = sanitizeInput($_POST['dossard']);
+                            $date = sanitizeInput($_POST['date']);
+                            $remarque = sanitizeInput($_POST['remarque']);
+                            $idCommissaire = sanitizeInput($_POST['idCommissaire']);
+
+                            $result = $ctrl->getWorker()->postResultatConcurrent($idPoste, $dossard, $date, $remarque, $idCommissaire);
+
+                            echo json_encode($result);
+                            http_response_code(200);
+                        } else {
+                            handleErrorResponse("Paramètres manquants pour la connexion.");
+                        }
+                        break;
+
+                    case 'postMalusConcurrent':
+                        if (isset($_POST['dossard'], $_POST['date'], $_POST['remarque'], $_POST['idCommissaire'], $_POST['nombrePoints'])) {
+                            $dossard = sanitizeInput($_POST['dossard']);
+                            $date = sanitizeInput($_POST['date']);
+                            $remarque = sanitizeInput($_POST['remarque']);
+                            $idCommissaire = sanitizeInput($_POST['idCommissaire']);
+                            $nombrePoints = sanitizeInput($_POST['nombrePoints']);
+
+                            $result = $ctrl->getWorker()->postMalusConcurrent($dossard, $date, $remarque, $idCommissaire, $nombrePoints);
+                            echo json_encode($result);
+                            http_response_code(200);
+                        } else {
+                            handleErrorResponse("Paramètres manquants pour la connexion.");
+                        }
+                        break;
+
+                    case 'disconnect':
+                        echo $session->disconnect();
+                        http_response_code(200);
+                        break;
+
+                    default:
+                        handleErrorResponse("Action POST inconnue");
+                        break;
                 }
             }
             break;

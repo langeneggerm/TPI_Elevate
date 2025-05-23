@@ -1,0 +1,67 @@
+<div class="max-w-sm mx-auto min-h-screen flex flex-col justify-between">
+
+  <!-- En-tête -->
+  <header class="bg-blue-700 text-white p-4 rounded-b-lg shadow w-full max-w-xl">
+    <h1 class="text-2xl font-bold text-center">Elevate</h1>
+    <p class="text-center text-sm">Saisie des Malus</p>
+
+  </header>
+
+  <!-- Formulaire -->
+  <main class="px-4 py-6 flex-1">
+    <form id="formulaire" class="space-y-6">
+      <!-- Dossard -->
+      <div>
+        <label for="dossard" class="block font-medium mb-1">Concurrent(e)</label>
+        <input type="number" id="dossard" name="dossard" inputmode="numeric"
+          class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Numéro de dossard" required />
+      </div>
+
+      <!-- Date et Heure -->
+      <div>
+        <label for="datetime" class="block font-medium mb-1">Date et heure</label>
+        <div class="flex gap-2">
+          <input type="text" id="datetime" name="datetime"
+            class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            readonly />
+          <button type="button" id="heureActuelle" class="p-2 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200"
+            title="Mettre à jour l'heure">
+            ⏱️
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label for="points" class="block font-medium mb-1">Malus</label>
+        <input type="number" id="pointsMalus" name="pointsMalus" inputmode="numeric"
+          class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Nombre de points à enlever" required />
+      </div>
+
+      <!-- Remarques -->
+      <div>
+        <label for="remarques" class="block font-medium mb-1">Remarques</label>
+        <textarea id="remarques" name="remarques" rows="4"
+        input="text"
+          class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Vos remarques ..."></textarea>
+      </div>
+
+      <!-- Enregistrer -->
+      <button id="postMalus" type="button" class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+        Enregistrer
+      </button>
+    </form>
+  </main>
+
+
+<!-- Pied de page -->
+<footer class="fixed bottom-0 left-1/2 -translate-x-1/2 bg-white p-4 rounded-t-lg shadow flex justify-center space-x-4 w-full max-w-xl">
+  <button id="retourSelection" class="text-blue-700 hover:text-blue-900 font-semibold text-sm flex items-center">
+    ← Retour sélection
+  </button>
+</footer>
+
+
+</div>
