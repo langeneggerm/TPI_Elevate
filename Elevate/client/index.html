@@ -28,10 +28,11 @@
   <script src="js/controller/postesCommissaireCtrl.js"></script>
   <script src="js/controller/saisieResultatsCtrl.js"></script>
   <script src="js/controller/saisieMalusCtrl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/client/sw.js')
+        navigator.serviceWorker.register('/sw.js')
           .then(registration => {
             console.log('Service Worker enregistré avec succès:', registration);
           })

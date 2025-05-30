@@ -71,6 +71,13 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
                         break;
 
                     case 'postResultatConcurrent':
+                        // Vérification de session
+                        if (!isset($_SESSION['email'])) {
+                            handleErrorResponse("Utilisateur non authentifié.");
+                            http_response_code(401);
+                            break;
+                        }
+
                         if (isset($_POST['idPoste'], $_POST['dossard'], $_POST['date'], $_POST['remarque'], $_POST['idCommissaire'])) {
                             $idPoste = sanitizeInput($_POST['idPoste']);
                             $dossard = sanitizeInput($_POST['dossard']);
@@ -86,8 +93,15 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
                             handleErrorResponse("Paramètres manquants pour la connexion.");
                         }
                         break;
-
                     case 'postMalusConcurrent':
+                        // Vérifie que l'utilisateur est connecté via la session
+                        if (!isset($_SESSION['email'])) {
+                            handleErrorResponse("Utilisateur non authentifié.");
+                            http_response_code(401);
+                            break;
+                        }
+
+                        // Vérifie la présence des paramètres POST
                         if (isset($_POST['dossard'], $_POST['date'], $_POST['remarque'], $_POST['idCommissaire'], $_POST['nombrePoints'])) {
                             $dossard = sanitizeInput($_POST['dossard']);
                             $date = sanitizeInput($_POST['date']);
@@ -102,6 +116,9 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
                             handleErrorResponse("Paramètres manquants pour la connexion.");
                         }
                         break;
+
+
+
 
                     case 'disconnect':
                         echo $session->disconnect();

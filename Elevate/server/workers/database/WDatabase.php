@@ -21,10 +21,9 @@ class WDatabase
         FROM 
             t_Concurrents AS c
         JOIN 
-            t_Localites AS l ON c.NPALocalite = l.NPA;
+            t_Localites AS l ON c.idLocalite = l.id;
         ";
             $rows = WDatabaseConnection::getInstance()->selectQuery($QUERY, []);
-
             $result = [];
             foreach ($rows as $row) {
                 $result[] = [
@@ -38,7 +37,6 @@ class WDatabase
                     'ville' => $row['ville'],
                 ];
             }
-
             return $result;
         } catch (Exception $e) {
             throw new Exception("Erreur lors de la récupération du classement : " . $e->getMessage());

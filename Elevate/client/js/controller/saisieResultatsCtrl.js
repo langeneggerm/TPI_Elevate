@@ -5,13 +5,12 @@ class SaisieResultatController {
      */
     constructor(idPoste) {
         $("#content").load("views/saisieResultats.html", () => {
-            $("#retourSelection").on("click",()=>this.gotoPostesCommissaire());
+            $("#retourSelection").on("click", () => this.gotoPostesCommissaire());
             $("#heureActuelle").on("click", () => {
-                const dateHeure = this.obtenirDateHeureActuelle();
+                const dateHeure = indexCtrl.obtenirDateHeureActuelle();
                 $("#datetime").val(dateHeure);
             });
-
-            $("#postResultat").on("click", () => {
+            $("#postResultat").on("click", async () => {
                 const numeroDossard = $("#dossard").val();
                 const dateHeure = $("#datetime").val();
                 const estValide = !isNaN(Date.parse(dateHeure.replace(" ", "T")));
@@ -20,24 +19,64 @@ class SaisieResultatController {
                     alert("La date et heure est invalide.");
                     return;
                 }
-
-
                 const remarques = $("#remarques").val();
                 const idCommissaire = localStorage.getItem("id");
+                const data = {
+                    idPoste,
+                    numeroDossard,
+                    dateHeure,
+                    remarques,
+                    idCommissaire
+                };
 
-                postResultatConcurrent(idPoste, numeroDossard, dateHeure, remarques, idCommissaire, (data) => {
-                    alert("Le résultat a bien été enregistré");
+                if (navigator.onLine) {
+                    postResultatConcurrent(idPoste, numeroDossard, dateHeure, remarques, idCommissaire,
+                        () => {
+                            Swal.fire({
+                                title: "Résultat enregistré !",
+                                text: "Le concurrent N° " + numeroDossard + " a recu un résultat",
+                                icon: "success"
+                            });
+                            $('input[type="text"]').val('');
+                            $('#dossard').val('');
+                            $('#remarques').val('');
+                            $('#dossard').focus();
+                        },
+                        (error) => {
+                            alert("Erreur lors de l'ajout du résultat: " + error.responseText);
+                        }
+                    );
+                } else {
+                    console.log("Hors ligne : stockage local du résultat");
+                    await this.storeOfflineResult(data);
+                    Swal.fire({
+                        title: "Vous êtes hors connexion !",
+                        text: "Les requêtes sont mise en attente",
+                        icon: "warning"
+                    });
                     $('input[type="text"]').val('');
                     $('#dossard').val('');
                     $('#remarques').val('');
                     $('#dossard').focus();
+                }
+            });
 
+        });
+    }
 
-
-                }, (error) => {
-                    alert("Erreur lors de l'ajout du résultat: " + error.responseText)
-                })
-            })
+    async storeOfflineResult(data) {
+        const db = await new PostesCommissaireController().openPostDB();
+        const tx = db.transaction('post-requests', 'readwrite');
+        const store = tx.objectStore('post-requests');
+        await store.add({
+            functionName: "postResultatConcurrent",
+            args: [
+                data.idPoste,
+                data.numeroDossard,
+                data.dateHeure,
+                data.remarques,
+                data.idCommissaire
+            ]
         });
     }
 
@@ -46,21 +85,12 @@ class SaisieResultatController {
     /**
  * Formate la date et l'heure au format YYYY-MM-DD HH:mm:ss
  */
-    obtenirDateHeureActuelle() {
-        const maintenant = new Date();
-        const yyyy = maintenant.getFullYear();
-        const mm = String(maintenant.getMonth() + 1).padStart(2, '0');
-        const dd = String(maintenant.getDate()).padStart(2, '0');
-        const hh = String(maintenant.getHours()).padStart(2, '0');
-        const min = String(maintenant.getMinutes()).padStart(2, '0');
-        const ss = String(maintenant.getSeconds()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
-    }
 
-    gotoPostesCommissaire(){
+
+    gotoPostesCommissaire() {
         this.postesComm = new PostesCommissaireController(localStorage.getItem("id"));
     }
-gotoSaisieMalus(){
-    this.saisieMalus = new SaisieMalusController();
-}
+    gotoSaisieMalus() {
+        this.saisieMalus = new SaisieMalusController();
+    }
 }

@@ -15,14 +15,32 @@ class ClassementController {
   constructor() {
 
     $("#content").load("views/classement.html", () => {
+      setInterval(this.loadData(), 10000);
       $("#btnRefresh").on("click", () => (this.loadData()));
       $("#btnLogin").on("click", () => (this.gotoLogin()));
       $("#btnEdit").on("click", () => (this.gotoPosteCommissaire()));
       $("#logout").on("click", () => {
-        disconnect((data)=>{
-          alert(JSON.stringify(data));
-        }, (error)=>{
-          alert(JSON.stringify(error));
+        disconnect((data) => {
+          if (data.result === true) {
+            Swal.fire({
+              title: "Au revoir 👋",
+              text: "Utilisateur " + username + " déconnecté !",
+              icon: "success"
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "La déconnexion a échoué !",
+            });
+          }
+
+        }, () => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "La déconnexion a échoué !",
+          });
         });
         localStorage.setItem('id', null);
         localStorage.setItem('isLogged', false);
@@ -53,9 +71,8 @@ class ClassementController {
         console.warn("Détail complet :", xhr.responseText);
       }
     );
-
-
   }
+
   renderClassement(data) {
     const listElement = document.querySelector("ul.space-y-2");
     listElement.innerHTML = "";
@@ -88,12 +105,9 @@ class ClassementController {
 
       listElement.appendChild(listItem);
     });
-
-
-
-
-
   }
+
+
   gotoLogin() {
     this.login = new LoginController();
   }

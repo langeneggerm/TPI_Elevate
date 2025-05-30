@@ -19,20 +19,21 @@ class SessionController
     }
 
     /**
-    * Connecte un utilisateur.
-    *
-    * @param string $username Le nom d'utilisateur.
-    * @param string $password Le mot de passe.
-    * @return string Une chaîne JSON indiquant si la connexion a réussi et le nom d'utilisateur si c'est le cas.
-    */
-    public function login($email, $password) {
+     * Connecte un utilisateur.
+     *
+     * @param string $username Le nom d'utilisateur.
+     * @param string $password Le mot de passe.
+     * @return string Une chaîne JSON indiquant si la connexion a réussi et le nom d'utilisateur si c'est le cas.
+     */
+    public function login($email, $password)
+    {
         $request = "SELECT * FROM t_Commissaires WHERE email = :email";
         $params = array('email' => $email);
         $user = $this->worker->getDataBaseWrk()->selectSingleQuery($request, $params);
-        if(isset($user['email'])) {
-            if(password_verify($password, $user['PIN'])) {
-              $_SESSION['email'] = $email;
-              $_SESSION['id'] = $user['id'];
+        if (isset($user['email'])) {
+            if (password_verify($password, $user['PIN'])) {
+                $_SESSION['email'] = $email;
+                $_SESSION['id'] = $user['id'];
                 return '{"result": true, "email": "' . $user['email'] . '"' . ',"id":"' . $user['id'] . '"}';
             }
         }
@@ -71,4 +72,3 @@ class SessionController
         return  password_hash($password, PASSWORD_DEFAULT);
     }
 }
-?>

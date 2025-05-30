@@ -43,11 +43,19 @@ class LoginController {
                     localStorage.setItem("email", data.email);
                     localStorage.setItem("id", data.id);
                     localStorage.setItem("isLogged", true);
-                    alert("La connexion à réussi !");
+                    Swal.fire({
+                        title: "Connexion Réussi",
+                        text: "Utilisateur " + username + " connecté !",
+                        icon: "success"
+                      });
                     this.gotoPosteCommissaire();
                 } else {
                     // Afficher une erreur si les informations sont incorrectes
-                    alert("Nom d'utilisateur ou mot de passe invalide.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Code PIN ou email incorrect !",
+                      });
                 }
             },
             (error) => {
