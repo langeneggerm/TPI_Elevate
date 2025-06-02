@@ -57,14 +57,12 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
                         if (isset($_POST['email'], $_POST['password'])) {
                             $username = sanitizeInput($_POST['email']);
                             $password = sanitizeInput($_POST['password']);
-
                             echo $session->login($username, $password);
                             http_response_code(200);
                         } else {
                             handleErrorResponse("Paramètres manquants pour la connexion.");
                         }
                         break;
-
                     case 'isLogged':
                         echo $session->isLogged();
                         http_response_code(200);
